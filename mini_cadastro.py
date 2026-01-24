@@ -41,8 +41,6 @@ def main (page: ft.Page):
     
     #RENDERIZAÇÃO DA LISTA
     
-    
-    
     def renderizar_lista():
         lista.controls.clear()
 
@@ -68,3 +66,65 @@ def main (page: ft.Page):
             )
 
             lista.controls.append(item)
+            
+            #Eventos - Ações dos usuários
+            
+    def selecionar (rid: int):
+        nonlocal selecionado_id
+        selecionado_id = rid
+        
+        r = obter_registros_por_id(rid)
+        if r:
+            nome.value = r["nome"]
+            idade.value = r["idade"]
+            
+        btn_excluir.disabled = False
+        set_mensagem(f"Registro #{rid} selecionado", ft.Colors.BLUE)
+        renderizar_lista()
+        page.update()
+        
+    def salvar (e):
+        nonlocal prox_id, selecionado_id
+        
+        n = (nome.value or "").strip()
+        i = (idade.value or "").strip()
+        
+        if not n or not i:
+            set_mensagem ("Preencha Nome e Idade", ft.Colors.RED)
+            page.update()
+            return
+        
+        if selecionado_id is not None:
+            r = obter_registros_por_id(selecionado_id)
+            if r:
+                r["nome"] = n
+                r["idade"] = i
+                set_mensagem(f"Registro #{selecionado_id} atualizado", ft.Colors.GREEN)
+            else:
+                registros.append({"id": prox_id, "nome": n, "idade":i})
+                set_mensagem(f"Registro #{prox_id} criado", ft.Colors.GREEN)
+                prox_id += 1
+        
+        limpar_campos()
+        selecionado_id = None
+        btn_excluir.disabled = True
+        
+        renderizar_lista()
+        page.update()
+        
+    def excluir(e):
+        nonlocal selecionado_id
+        if selecionado_id is None:
+            return
+        
+        r = obter_registros_por_id(selecionado_id)
+        if r:
+            registros.remove(r)
+            set_mensagem(f"Registro #{selecionado_id} excluido", ft.Colors.ORANGE)
+        
+        selecionado_id = None
+        btn_excluir.disabled = True
+        limpar_campos()
+        
+        renderizar_lista()
+        page.update()
