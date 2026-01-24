@@ -13,7 +13,7 @@ def main (page: ft.Page):
     #Controles (inputs e botões)
     
     nome = ft.TextField(label = "Nome", width=300)
-    idade = ft.TextField(label="Idade",width=120, keyboard_type=ft.KeyboardType.Number)
+    idade = ft.TextField(label="Idade",width=120, keyboard_type=ft.KeyboardType.NUMBER)
     
     msg = ft.Text()
     
