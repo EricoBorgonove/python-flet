@@ -128,3 +128,36 @@ def main (page: ft.Page):
         
         renderizar_lista()
         page.update()
+        
+    def limpar_selecao(e):
+        nonlocal selecionado_id
+        selecionado_id = None
+        btn_excluir.disabled = True
+        limpar_campos()
+        set_mensagem("Seleção Limpa", ft.Colors.BLACK)
+        
+        renderizar_lista()
+        page.update()
+        
+    # amarrar eventos nos botões
+    btn_salvar.on_click = salvar
+    btn_excluir.on_click = excluir
+    btn_limpar.on_click = limpar_selecao
+    
+    #LAYOUT (organização visual)
+    
+    page.add(
+        ft.Text("Mini Cadastro (Clique em um item para editar)", size=18, 
+                                                      weight=ft.FontWeight.BOLD),
+        ft.Row([nome, idade], spacing=10),
+        ft.Row([btn_salvar, btn_excluir, btn_limpar], spacing=10),
+        msg,
+        ft.Divider(),
+        ft.Text("Registros:", weight=ft.FontWeight.BOLD),
+        lista,
+    )
+    #renderização inicial
+    renderizar_lista()
+    page.update()
+    
+ft.run(main)
