@@ -83,34 +83,42 @@ def main (page: ft.Page):
         renderizar_lista()
         page.update()
         
-    def salvar (e):
+    def salvar(e):
         nonlocal prox_id, selecionado_id
-        
+
         n = (nome.value or "").strip()
         i = (idade.value or "").strip()
-        
+
         if not n or not i:
-            set_mensagem ("Preencha Nome e Idade", ft.Colors.RED)
+            set_mensagem("Preencha Nome e Idade", ft.Colors.RED)
             page.update()
             return
-        
-        if selecionado_id is not None:
+
+        # 🔹 NOVO REGISTRO
+        if selecionado_id is None:
+            registros.append({
+                "id": prox_id,
+                "nome": n,
+                "idade": i
+            })
+            set_mensagem(f"Registro #{prox_id} criado", ft.Colors.GREEN)
+            prox_id += 1
+
+        # 🔹 EDIÇÃO
+        else:
             r = obter_registros_por_id(selecionado_id)
             if r:
                 r["nome"] = n
                 r["idade"] = i
                 set_mensagem(f"Registro #{selecionado_id} atualizado", ft.Colors.GREEN)
-            else:
-                registros.append({"id": prox_id, "nome": n, "idade":i})
-                set_mensagem(f"Registro #{prox_id} criado", ft.Colors.GREEN)
-                prox_id += 1
-        
+
         limpar_campos()
         selecionado_id = None
         btn_excluir.disabled = True
-        
+
         renderizar_lista()
         page.update()
+
         
     def excluir(e):
         nonlocal selecionado_id
