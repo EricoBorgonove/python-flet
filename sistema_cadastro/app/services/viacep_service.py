@@ -1,8 +1,8 @@
 import requests
 
-from app.utils import only_digits
+from app.utils.strings import only_digits
 
-def fech_address_from_viacep(cep: str) -> dict:
+def fetch_address_from_viacep(cep: str) -> dict:
     cep = only_digits(cep)
     if len(cep) != 8:
         raise ValueError("CEP deve ter 8 digitos.")
